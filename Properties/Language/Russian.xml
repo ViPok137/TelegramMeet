@@ -1,0 +1,15 @@
+﻿<Language>
+	<FormTitle>Телеграм Бот</FormTitle>
+	<buttonText>Запустить бота</buttonText>
+	<HelpLink>Как узнать API</HelpLink>
+	<labelAPI>Ваш API</labelAPI>
+
+	<EmptyTokenError>Ошибка: не указан HTTP API.</EmptyTokenError>
+	<InvalidFormatError>Ошибка: токен в неверном формате.</InvalidFormatError>
+	<InvalidTokenError>Ошибка: указанный токен недействителен.</InvalidTokenError>
+	<PyNotFoundError>Файл TelegramBotMeetCore.py не найден.</PyNotFoundError>
+	<BatNotFoundError>Файл pyins.bat не найден.</BatNotFoundError>
+	<BatRunError>Ошибка запуска pyins.bat</BatRunError>
+	<ErrorTitle>Ошибка</ErrorTitle>
+	<TextBox>Ввидите ключ API</TextBox>
+</Language>
