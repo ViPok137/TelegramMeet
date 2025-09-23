@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using System.Drawing;
 
 namespace TelegramMeet
 {
@@ -14,6 +15,8 @@ namespace TelegramMeet
         private XDocument languageDoc;
         private IniFile ini;
         private string baseDir;
+        private Process botProcess; // процесс бота
+        private bool botRunning = false; // флаг состояния бота
 
         public Form1()
         {
@@ -47,15 +50,12 @@ namespace TelegramMeet
 
             labelApi.Text = Translate("labelAPI");
 
-            // Подставляем токен из INI в TextBox. Используем string.IsNullOrWhiteSpace
-            // для более надежной проверки наличия токена.
             string savedToken = ini.Read("Settings", "TelegramToken");
             if (!string.IsNullOrWhiteSpace(savedToken))
                 botAPI.Text = savedToken;
             else
                 botAPI.Text = Translate("TextBox");
 
-            // Добавляем обработчик для события "Click" на botAPI.Text
             botAPI.Click += botAPI_Click;
         }
 
@@ -154,51 +154,78 @@ namespace TelegramMeet
         {
             this.Text = Translate("FormTitle");
             button1.Text = Translate("buttonText");
+            button1.BackColor = SystemColors.Control; // сброс цвета
             linkLabel1.Text = Translate("HelpLink");
         }
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            string token = botAPI.Text.Trim();
-
-            if (string.IsNullOrEmpty(token) || token == Translate("TextBox"))
+            if (!botRunning) // запуск бота
             {
-                MessageBox.Show(Translate("EmptyTokenError"), Translate("ErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+                string token = botAPI.Text.Trim();
 
-            if (!Regex.IsMatch(token, @"^\d+:[\w-]+$"))
-            {
-                MessageBox.Show(Translate("InvalidFormatError"), Translate("ErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (await CheckTelegramToken(token))
-            {
-                // Сохраняем токен в INI
-                ini.Write("Settings", "TelegramToken", token);
-
-                string filePath = Path.Combine(baseDir, "TelegramBotMeetCore.py");
-                if (File.Exists(filePath))
+                if (string.IsNullOrEmpty(token) || token == Translate("TextBox"))
                 {
-                    Process.Start(new ProcessStartInfo
+                    MessageBox.Show(Translate("EmptyTokenError"), Translate("ErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (!Regex.IsMatch(token, @"^\d+:[\w-]+$"))
+                {
+                    MessageBox.Show(Translate("InvalidFormatError"), Translate("ErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (await CheckTelegramToken(token))
+                {
+                    ini.Write("Settings", "TelegramToken", token);
+
+                    string filePath = Path.Combine(baseDir, "TelegramBotMeetCore.py");
+                    if (File.Exists(filePath))
                     {
-                        FileName = "python",
-                        Arguments = $"\"{filePath}\"",
-                        UseShellExecute = false
-                    });
+                        botProcess = new Process
+                        {
+                            StartInfo = new ProcessStartInfo
+                            {
+                                FileName = "python",
+                                Arguments = $"\"{filePath}\"",
+                                UseShellExecute = false
+                            }
+                        };
+                        botProcess.Start();
+
+                        botRunning = true;
+                        button1.Text = Translate("buttonStopText");
+                        button1.BackColor = Color.Red;
+                    }
+                    else
+                    {
+                        MessageBox.Show(Translate("PyNotFoundError"),
+                                        Translate("ErrorTitle"),
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show(Translate("PyNotFoundError"),
-                                    Translate("ErrorTitle"),
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
+                    MessageBox.Show(Translate("InvalidTokenError"), Translate("ErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            else
+            else // остановка бота
             {
-                MessageBox.Show(Translate("InvalidTokenError"), Translate("ErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                try
+                {
+                    if (botProcess != null && !botProcess.HasExited)
+                        botProcess.Kill();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка остановки бота: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                botRunning = false;
+                button1.Text = Translate("buttonText");
+                button1.BackColor = SystemColors.Control;
             }
         }
 
@@ -221,18 +248,10 @@ namespace TelegramMeet
             Process.Start("https://core.telegram.org/api");
         }
 
-        private void botAPI_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void botAPI_Click(object sender, EventArgs e)
         {
-            // Убираем текст-подсказку, если он соответствует тексту из XML
             if (botAPI.Text == Translate("TextBox"))
-            {
                 botAPI.Text = "";
-            }
         }
     }
 }

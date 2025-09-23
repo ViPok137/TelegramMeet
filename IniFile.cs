@@ -19,7 +19,7 @@ namespace TelegramMeet
 
             if (!File.Exists(path))
             {
-                using (StreamWriter sw = new StreamWriter(path, false, Encoding.UTF8))
+                using (StreamWriter sw = new StreamWriter(path, false, new UTF8Encoding(false))) // UTF-8 без BOM
                 {
                     sw.WriteLine("[Settings]");
                     sw.WriteLine("Language=Russian"); // язык по умолчанию
@@ -43,7 +43,13 @@ namespace TelegramMeet
         {
             var retVal = new StringBuilder(1024);
             GetPrivateProfileString(section, key, "", retVal, retVal.Capacity, path);
-            return retVal.ToString();
+
+            // удаляем BOM, если он вдруг прилип
+            string value = retVal.ToString();
+            if (!string.IsNullOrEmpty(value) && value[0] == '\ufeff')
+                value = value.Substring(1);
+
+            return value;
         }
     }
 }
