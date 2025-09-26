@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.36511.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgMeet", "TgMeet.csproj", "{8A726B85-DA35-4B10-BBF1-DEF23D42B8EA}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "..\Setup\Setup.vdproj", "{4D1AC582-8087-5490-FCC2-03CEC5D22547}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetuBot", "..\SetuBot\SetuBot.vdproj", "{19C3FED6-EE25-B807-FD92-141707FFE9F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,8 +17,8 @@ Global
 		{8A726B85-DA35-4B10-BBF1-DEF23D42B8EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A726B85-DA35-4B10-BBF1-DEF23D42B8EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A726B85-DA35-4B10-BBF1-DEF23D42B8EA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4D1AC582-8087-5490-FCC2-03CEC5D22547}.Debug|Any CPU.ActiveCfg = Debug
-		{4D1AC582-8087-5490-FCC2-03CEC5D22547}.Release|Any CPU.ActiveCfg = Release
+		{19C3FED6-EE25-B807-FD92-141707FFE9F8}.Debug|Any CPU.ActiveCfg = Debug
+		{19C3FED6-EE25-B807-FD92-141707FFE9F8}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

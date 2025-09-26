@@ -69,7 +69,6 @@
             this.botAPI.Name = "botAPI";
             this.botAPI.Size = new System.Drawing.Size(173, 20);
             this.botAPI.TabIndex = 4;
-            this.botAPI.TextChanged += new System.EventHandler(this.botAPI_TextChanged);
             // 
             // comboBoxLanguage
             // 

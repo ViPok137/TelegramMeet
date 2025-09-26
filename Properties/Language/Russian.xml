@@ -3,6 +3,7 @@
 	<buttonText>Запустить бота</buttonText>
 	<HelpLink>Как узнать API</HelpLink>
 	<labelAPI>Ваш API</labelAPI>
+	<buttonStopText>Остановить бота</buttonStopText>
 
 	<EmptyTokenError>Ошибка: не указан HTTP API.</EmptyTokenError>
 	<InvalidFormatError>Ошибка: токен в неверном формате.</InvalidFormatError>

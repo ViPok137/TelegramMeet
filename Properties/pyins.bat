@@ -23,7 +23,8 @@ if exist "%InstallerName%" (
 if exist "%LogFile%" (
     del "%LogFile%"
 )
+pip install python-telegram-bot==13.15
+pip install pillow
 echo Installing required Python packages...
-pip install python-telegram-bot
 echo Installation complete.
 echo Operation finished.
